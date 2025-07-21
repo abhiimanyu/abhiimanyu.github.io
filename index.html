@@ -1,158 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Abhimanyu Tomar — Portfolio Under Construction</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Pacifico&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <title>Abhimanyu Tomar | Digital Realm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     html, body {
-      height: 100%;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #e1c5eb, #4bdc58, #c0f95e 70%);
-      color: #272046;
-      font-family: 'Montserrat', Arial, sans-serif;
+      background: #000;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      color: #00ffcc;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      transition: background 1s;
-      overflow: hidden;
-    }
-    .container {
-      background: rgba(255,255,255,0.94);
-      border-radius: 18px;
-      box-shadow: 0 12px 40px 0 rgba(177,75,228,0.10), 0px 1.5px 15px #c0f95e88;
-      padding: 48px 32px 42px 32px;
-      gap: 18px;
+      justify-content: center;
       text-align: center;
-      max-width: 370px;
-      margin: 30px auto;
+    }
+
+    #particles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle, #101010 0%, #000000 100%);
+    }
+
+    .overlay {
+      z-index: 10;
       position: relative;
-      z-index: 1;
-      animation: bounceIn 1s;
+      padding: 2rem;
     }
-    @keyframes bounceIn {
-      0% { transform: scale(0.7) translateY(120px); opacity: 0;}
-      80% { transform: scale(1.08) translateY(-20px);}
-      100% { transform: scale(1) translateY(0); opacity: 1;}
-    }
-    .wave-emoji {
-      font-size: 3.5rem;
-      animation: wave 2.1s infinite;
-      display: inline-block;
-      transform-origin: 70% 70%;
-      margin-bottom: 0.2em;
-    }
-    @keyframes wave {
-      0%, 60%, 100% { transform: rotate(0deg);}
-      10%, 30% { transform: rotate(18deg);}
-      20% { transform: rotate(-8deg);}
-      40% { transform: rotate(12deg);}
-      50% { transform: rotate(-4deg);}
-    }
+
     h1 {
-      font-family: 'Pacifico', cursive;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 0 0 10px 0;
-      color: #a24bcf;
-      background: linear-gradient(90deg, #abefe8, #ed22da, #4bdc58);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-              background-clip: text;
-              text-fill-color: transparent;
-      animation: rainbowText 4s linear infinite alternate;
+      font-size: 3rem;
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+      animation: pulse 2s infinite;
     }
-    @keyframes rainbowText {
-      0% { filter: hue-rotate(0deg);}
-      100% { filter: hue-rotate(360deg);}
-    }
-    .subtitle {
-      font-size: 1.1rem;
-      margin-bottom: 22px;
-      font-weight: 400;
-      color: #222c43;
-    }
-    .glow {
+
+    .typing {
+      margin-top: 1rem;
       font-size: 1.2rem;
-      letter-spacing: 2px;
-      color: #fff;
-      background: linear-gradient(90deg, #e1c5eb 15%, #ed22da 40%, #abefe8 75%);
-      border-radius: 5px;
-      box-shadow: 0 0 25px #abefe8, 0 0 3px #ed22da;
-      padding: 5px 14px;
-      margin-bottom: 20px;
-      display: inline-block;
-      animation: pulse 1.5s infinite alternate;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 12px #abefe8, 0 0 4px #ed22da;}
-      100% { box-shadow: 0 0 28px #ed22da, 0 0 6px #a24bcf;}
-    }
-
-    .under-construction-msg {
-      font-size: 1.1rem;
-      margin: 22px auto 0 auto;
-      font-weight: 500;
-      color: #a24bcf;
-      animation: flicker 2s infinite alternate;
-    }
-    @keyframes flicker {
-      0% { opacity: 0.7; }
-      65% { opacity: 1; }
-      100% { opacity: 0.49; }
-    }
-
-    .bubbles {
-      position: absolute;
-      top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index:0;
+      color: #b3ffe2;
+      white-space: pre-wrap;
+      border-right: 2px solid #b3ffe2;
+      width: fit-content;
+      margin-inline: auto;
       overflow: hidden;
+      animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
     }
-    .bubble {
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 10px #00ffe1; }
+      50% { text-shadow: 0 0 20px #00ffe1, 0 0 30px #00ffe1; }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .card {
+      background: rgba(0, 255, 204, 0.05);
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      margin-top: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    footer {
       position: absolute;
-      bottom: -100px;
-      background: radial-gradient(circle at 30% 30%, #fff8, transparent 70%);
-      border-radius: 100%;
-      opacity: 0.42;
-      animation: floatBubble 8s infinite cubic-bezier(0.34, 0.59, 0.49, 1.02);
-      transition: background 2s;
-    }
-    @keyframes floatBubble {
-      0% { transform: translateY(0) scale(0.9);}
-      45% { opacity: 0.62;}
-      80% { opacity: 0.29;}
-      100% { transform: translateY(-110vh) scale(1.2); opacity: 0.05;}
-    }
-    @media (max-width: 475px) {
-      .container { padding: 25px 6vw; max-width: 96vw;}
-      h1 { font-size: 2rem;}
-      .wave-emoji { font-size: 2.4rem;}
+      bottom: 10px;
+      font-size: 0.8rem;
+      color: #005f52;
     }
   </style>
 </head>
 <body>
-  <div class="bubbles">
-    <!-- Animated bubbles with varying positions, sizes, and colors -->
-    <div class="bubble" style="left: 10vw; width:55px; height:55px; background:#e1c5eb55; animation-delay: 0s;"></div>
-    <div class="bubble" style="left: 40vw; width:40px; height:40px; background:#4bdc5888; animation-delay: 1s;"></div>
-    <div class="bubble" style="left: 75vw; width:75px; height:75px; background:#c0f95e66; animation-delay: 2.2s;"></div>
-    <div class="bubble" style="left: 85vw; width:35px; height:35px; background:#ed22daAA; animation-delay: 1.5s;"></div>
-    <div class="bubble" style="left: 60vw; width:50px; height:50px; background:#abefe888; animation-delay: 0.7s;"></div>
-    <div class="bubble" style="left: 25vw; width:62px; height:62px; background:#a24bcf66; animation-delay: 2.8s;"></div>
+  <canvas id="particles"></canvas>
+  <div class="overlay">
+    <h1>System Booting...</h1>
+    <div class="typing" id="typed-text"></div>
+    <div class="card">
+      <p>🛠️ This digital realm is still under construction.<br/>
+         Abhimanyu Tomar is crafting something epic.</p>
+    </div>
   </div>
-  <div class="container">
-    <div class="wave-emoji" role="img" aria-label="waving hand">👋</div>
-    <h1>Welcome!</h1>
-    <div class="glow">Hi, I'm Abhimanyu Tomar</div>
-    <div class="subtitle">This is my creative portfolio website.</div>
-    <div class="under-construction-msg">🚧 Under Construction 🚧</div>
-  </div>
+  <footer>© 2025 Abhimanyu Tomar. Made with ☕ + 💻</footer>
+
+  <script>
+    // Typewriter text
+    const text = "Welcome to Abhimanyu's digital space...\nInitializing creativity protocol...\nActivating backend wizardry...\nStay tuned.";
+    let i = 0;
+    const speed = 40;
+    const typedText = document.getElementById("typed-text");
+
+    function typeWriter() {
+      if (i < text.length) {
+        typedText.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+    typeWriter();
+
+    // Matrix-style particles background
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let chars = "01";
+    chars = chars.split("");
+
+    let fontSize = 14;
+    let columns = canvas.width / fontSize;
+
+    let drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ffcc";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        let text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+          drops[i] = 0;
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+    window.addEventListener("resize", () => location.reload());
+  </script>
 </body>
 </html>
