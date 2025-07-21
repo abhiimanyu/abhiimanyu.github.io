@@ -1,58 +1,123 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome | Abhimanyu Tomar</title>
+  <title>Abhimanyu Tomar | Under Construction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(ellipse at center, #1e1e2f 0%, #111 100%);
+      font-family: 'Roboto', sans-serif;
       color: #fff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      text-align: center;
+      overflow: hidden;
     }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
+
     h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(90deg, #00ffe0, #0ff, #00ffe0);
+      background-size: 200% auto;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glowText 4s linear infinite;
+    }
+
+    @keyframes glowText {
+      0% {
+        background-position: 0% center;
+      }
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #bbb;
+    }
+
+    .card {
+      margin-top: 2rem;
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-block;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .card p {
+      font-size: 1.2rem;
+      color: #ffdf9e;
+    }
+
+    .construction-emoji {
       font-size: 3rem;
       margin-bottom: 0.5rem;
-    }
-    h2 {
-      font-weight: 300;
-      margin-top: 0;
-    }
-    .construction {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      color: #ffedba;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px dashed #ffedba;
-    }
-    .emoji {
-      font-size: 2rem;
-      margin-bottom: 1rem;
       animation: bounce 1.5s infinite;
     }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 1rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      .subtitle {
+        font-size: 1.2rem;
+      }
+      .card p {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="emoji">🚧</div>
-  <h1>Welcome to My Website</h1>
-  <h2>I’m Abhimanyu Tomar</h2>
-  <div class="construction">
-    This website is under construction.<br/>
-    Stay tuned for something awesome!
+  <div class="container">
+    <h1>Welcome to My Website</h1>
+    <div class="subtitle">Hi, I’m Abhimanyu Tomar</div>
+    <div class="card">
+      <div class="construction-emoji">🚧</div>
+      <p>This site is currently under construction.<br>
+      Come back soon for something awesome!</p>
+    </div>
   </div>
+  <footer>© 2025 Abhimanyu Tomar • All rights reserved</footer>
 </body>
 </html>
