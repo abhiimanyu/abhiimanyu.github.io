@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Abhimanyu Tomar | Launch Terminal</title>
+  <title>Abhimanyu Tomar | Launch Console</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
@@ -30,49 +30,44 @@
     .terminal {
       position: relative;
       z-index: 1;
-      max-width: 700px;
-      margin: 80px auto;
-      padding: 40px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid rgba(0, 255, 255, 0.2);
-      border-radius: 10px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 255, 0.15);
+      border-radius: 8px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
       text-align: left;
-      overflow: hidden;
     }
 
-    .glitch-title {
+    .console-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2.5em;
+      font-size: 1.8em;
       color: #0ff;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-      animation: glitch 1.5s infinite;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
     }
 
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(2px, -2px); }
-      60% { transform: translate(-1px, 1px); }
-      80% { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
+    .intro-text {
+      font-size: 1em;
+      line-height: 1.6;
+      color: #aef;
+      opacity: 0.85;
     }
 
-    .typewriter {
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid #0ff;
-      width: 0;
-      animation: typing 4s steps(60, end) forwards;
-      font-size: 1.1em;
-      margin-bottom: 25px;
+    .status {
+      font-size: 0.85em;
+      color: #0ff;
+      opacity: 0.5;
+      margin-top: 20px;
+      animation: subtlePulse 3s infinite;
     }
 
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
+    @keyframes subtlePulse {
+      0% {opacity: 0.4;}
+      50% {opacity: 0.8;}
+      100% {opacity: 0.4;}
     }
 
     .scanlines {
@@ -84,35 +79,22 @@
       pointer-events: none;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(0, 255, 255, 0.05),
-        rgba(0, 255, 255, 0.05) 1px,
+        rgba(0, 255, 255, 0.02),
+        rgba(0, 255, 255, 0.02) 1px,
         transparent 1px,
         transparent 2px
       );
       z-index: 2;
     }
 
-    .status {
-      font-size: 0.9em;
-      color: #0ff;
-      opacity: 0.6;
-      margin-top: 20px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% {opacity: 0.4;}
-      50% {opacity: 1;}
-      100% {opacity: 0.4;}
-    }
-
     @media (max-width: 600px) {
       .terminal {
-        padding: 30px 20px;
+        padding: 20px;
+        margin: 60px 20px;
       }
 
-      .glitch-title {
-        font-size: 1.8em;
+      .console-title {
+        font-size: 1.4em;
       }
     }
   </style>
@@ -121,14 +103,13 @@
   <div id="particles-js"></div>
 
   <div class="terminal">
-    <div class="glitch-title">[ System Booting ]</div>
-    <div class="typewriter">
-      Initializing Abhimanyu Tomar's Website...<br>
-      Loading creative modules...<br>
-      Establishing secure connection...<br>
-      >> Welcome Agent. Launch incoming.
+    <div class="console-title">Launch Console</div>
+    <div class="intro-text">
+      Establishing interface.<br>
+      Connecting with Abhimanyu Tomar's core services.<br>
+      Environment loaded. Standing by.
     </div>
-    <div class="status">🚀 Preparing to deploy...</div>
+    <div class="status">Loading environment modules...</div>
     <div class="scanlines"></div>
   </div>
 
@@ -142,7 +123,7 @@
         "shape": { "type": "circle" },
         "opacity": {
           "value": 0.3,
-          "random": true,
+          "random": true
         },
         "size": {
           "value": 2.5,
