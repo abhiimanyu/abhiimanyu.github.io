@@ -1,167 +1,380 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Abhimanyu Tomar | Launch Console</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jumping Ball Runner</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --bg1: #7bdff6; /* sky */
+      --bg2: #50c878; /* hills */
+      --accent: #ffdd57; /* sunny accent */
+      --ui: #2b2d42;
+      --card: rgba(255,255,255,0.85);
     }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
 
-    body {
-      font-family: 'Share Tech Mono', monospace;
-      background: #0f2027;
-      overflow: hidden;
-      color: #0ff;
-    }
+    /* layout */
+    .wrap{height:100vh;display:grid;grid-template-rows:1fr auto;align-items:stretch;background:linear-gradient(180deg,var(--bg1),#b2f7ef 40%,var(--bg2) 100%);overflow:hidden}
+    header{padding:10px 18px;display:flex;justify-content:space-between;align-items:center}
+    h1{margin:0;font-size:18px;color:var(--ui);letter-spacing:0.6px}
+    .hud{display:flex;gap:12px;align-items:center}
+    .chip{background:var(--card);padding:8px 10px;border-radius:12px;box-shadow:0 6px 18px rgba(43,45,66,0.08);display:flex;flex-direction:column;align-items:flex-start}
+    .chip small{font-size:11px;color:#666}
+    .chip strong{font-size:16px;color:var(--ui)}
 
-    #particles-js {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      background: linear-gradient(135deg, #1f1c2c, #928DAB);
-    }
+    /* game area */
+    .game-area{position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center}
+    canvas{background:transparent;display:block;width:100%;height:100%}
 
-    .terminal {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-      margin: 100px auto;
-      padding: 30px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(0, 255, 255, 0.15);
-      border-radius: 8px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
-      text-align: left;
-    }
+    /* parallax layers */
+    .parallax{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .layer{position:absolute;left:0;right:0;bottom:0;height:60%;background-repeat:repeat-x}
+    .layer.far{height:100%;background-image:radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0 2px, transparent 3px), linear-gradient(180deg, rgba(255,255,255,0.06), transparent);opacity:0.6}
+    .layer.hills{height:55%;background-image:radial-gradient(circle at 10% 90%, rgba(0,0,0,0.06), transparent 40%), linear-gradient(180deg,#8aedb1,#46c37b);border-top-left-radius:50% 30%;border-top-right-radius:50% 30%;transform-origin:center}
+    .layer.clouds{height:60%;top:0;background-image:linear-gradient(90deg, rgba(255,255,255,0.5) 0 10%, transparent 10%);opacity:0.8}
 
-    .console-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.8em;
-      color: #0ff;
-      margin-bottom: 16px;
-      letter-spacing: 1px;
-    }
+    /* footer controls */
+    footer{display:flex;gap:12px;padding:12px;justify-content:center;align-items:center}
+    button{background:linear-gradient(180deg,var(--accent),#ffb84d);border:0;padding:10px 16px;border-radius:12px;font-weight:600;box-shadow:0 8px 20px rgba(255,189,80,0.2);cursor:pointer}
+    button.secondary{background:linear-gradient(180deg,#fff,#f4f4f8);color:var(--ui);padding:8px 12px}
 
-    .intro-text {
-      font-size: 1em;
-      line-height: 1.6;
-      color: #aef;
-      opacity: 0.85;
-    }
+    .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .card{pointer-events:auto;background:linear-gradient(180deg,rgba(255,255,255,0.95),#ffffff);padding:18px;border-radius:14px;box-shadow:0 10px 40px rgba(2,6,23,0.12)}
 
-    .status {
-      font-size: 0.85em;
-      color: #0ff;
-      opacity: 0.5;
-      margin-top: 20px;
-      animation: subtlePulse 3s infinite;
-    }
-
-    @keyframes subtlePulse {
-      0% {opacity: 0.4;}
-      50% {opacity: 0.8;}
-      100% {opacity: 0.4;}
-    }
-
-    .scanlines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 255, 255, 0.02),
-        rgba(0, 255, 255, 0.02) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      z-index: 2;
-    }
-
-    @media (max-width: 600px) {
-      .terminal {
-        padding: 20px;
-        margin: 60px 20px;
-      }
-
-      .console-title {
-        font-size: 1.4em;
-      }
-    }
+    /* responsive small */
+    @media (max-width:640px){h1{font-size:15px}.chip strong{font-size:14px}button{padding:10px 12px}}
   </style>
 </head>
 <body>
-  <div id="particles-js"></div>
+  <div class="wrap">
+    <header>
+      <h1>Jumping Ball Runner</h1>
+      <div class="hud">
+        <div class="chip"><small>Score</small><strong id="score">0</strong></div>
+        <div class="chip"><small>High</small><strong id="high">0</strong></div>
+      </div>
+    </header>
 
-  <div class="terminal">
-    <div class="console-title">Launch Console</div>
-    <div class="intro-text">
-      Establishing interface.<br>
-      Connecting with Abhimanyu Tomar's core services.<br>
-      Environment loaded. Standing by.
-    </div>
-    <div class="status">Loading environment modules...</div>
-    <div class="scanlines"></div>
+    <main class="game-area">
+      <div class="parallax" id="parallax">
+        <div class="layer far" id="layer-far"></div>
+        <div class="layer clouds" id="layer-clouds"></div>
+        <div class="layer hills" id="layer-hills"></div>
+      </div>
+
+      <canvas id="gameCanvas" width="1200" height="600" aria-label="Jumping Ball Runner game"></canvas>
+
+      <div class="overlay" id="overlay">
+        <div class="card" id="startCard">
+          <h2 style="margin:0 0 8px 0">Play — Jump over obstacles</h2>
+          <p style="margin:0 0 12px 0;color:#444">Tap / Click or press <strong>Space</strong> to jump. Survive as long as possible. Speed increases over time. Sounds are goofy by design.</p>
+          <div style="display:flex;gap:10px;justify-content:center">
+            <button id="startBtn">Start</button>
+            <button class="secondary" id="howBtn">How to Play</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <button id="retryBtn">Retry</button>
+      <button class="secondary" id="muteBtn">Mute Sounds</button>
+    </footer>
   </div>
 
-  <!-- Particle.js Library -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
-    particlesJS("particles-js", {
-      "particles": {
-        "number": { "value": 60 },
-        "color": { "value": "#0ff" },
-        "shape": { "type": "circle" },
-        "opacity": {
-          "value": 0.3,
-          "random": true
-        },
-        "size": {
-          "value": 2.5,
-          "random": true
-        },
-        "line_linked": {
-          "enable": true,
-          "distance": 120,
-          "color": "#0ff",
-          "opacity": 0.1,
-          "width": 1
-        },
-        "move": {
-          "enable": true,
-          "speed": 1.2,
-          "direction": "none",
-          "out_mode": "bounce"
-        }
-      },
-      "interactivity": {
-        "detect_on": "canvas",
-        "events": {
-          "onhover": {
-            "enable": true,
-            "mode": "grab"
-          }
-        },
-        "modes": {
-          "grab": {
-            "distance": 140,
-            "line_linked": {
-              "opacity": 0.3
-            }
-          }
-        }
-      },
-      "retina_detect": true
+  // -- Game constants and state
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width, H = canvas.height;
+
+  // UI elements
+  const scoreEl = document.getElementById('score');
+  const highEl = document.getElementById('high');
+  const overlay = document.getElementById('overlay');
+  const startBtn = document.getElementById('startBtn');
+  const startCard = document.getElementById('startCard');
+  const retryBtn = document.getElementById('retryBtn');
+  const muteBtn = document.getElementById('muteBtn');
+  const howBtn = document.getElementById('howBtn');
+
+  // parallax
+  const layerFar = document.getElementById('layer-far');
+  const layerClouds = document.getElementById('layer-clouds');
+  const layerHills = document.getElementById('layer-hills');
+
+  let running = false;
+  let muted = false;
+
+  // Audio helper using WebAudio for silly sounds
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const audioCtx = new AudioCtx();
+  function playBoing(){ if(muted) return; boing(); }
+  function playHit(){ if(muted) return; thud(); }
+  function playPing(){ if(muted) return; fanfare(); }
+
+  function boing(){
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(180, audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.25);
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.5, audioCtx.currentTime + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.5);
+  }
+  function thud(){
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(120, audioCtx.currentTime);
+    g.gain.setValueAtTime(0.4, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.6);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.6);
+  }
+  function fanfare(){
+    // simple 3-tone sequence
+    const now = audioCtx.currentTime;
+    [[880,0],[1100,0.08],[1320,0.16]].forEach(([f, t], i)=>{
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type='square'; o.frequency.setValueAtTime(f, now + t);
+      g.gain.setValueAtTime(0.0001, now+t);
+      g.gain.exponentialRampToValueAtTime(0.3, now+t+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, now+t+0.2);
+      o.connect(g); g.connect(audioCtx.destination); o.start(now+t); o.stop(now+t+0.25);
     });
+  }
+
+  // Game world
+  const groundY = H - 110; // ground level for visuals
+  let player, obstacles, speed, score, highScore, spawnTimer, spawnRate, lastTime, accTime;
+
+  function resetGame(){
+    player = {x:160, y:groundY-40, r:30, vy:0, onGround:true, jumpPower:-13, color:'#ff6b6b'};
+    obstacles = [];
+    speed = 5; // base horizontal speed
+    spawnTimer = 0; spawnRate = 1400; // ms between obstacles
+    score = 0; accTime = 0;
+    highScore = Number(localStorage.getItem('jr_high') || 0);
+    scoreEl.textContent = 0; highEl.textContent = highScore;
+  }
+
+  // input
+  function jump(){
+    if(!running) return startGame();
+    if(player.onGround){ player.vy = player.jumpPower; player.onGround=false; playBoing(); }
+  }
+  window.addEventListener('keydown', e=>{ if(e.code==='Space'){ e.preventDefault(); jump(); } });
+  canvas.addEventListener('mousedown', jump);
+  canvas.addEventListener('touchstart', e=>{ e.preventDefault(); jump(); }, {passive:false});
+
+  // start/retry/mute
+  startBtn.addEventListener('click', ()=>startGame());
+  retryBtn.addEventListener('click', ()=>{ startGame(true); });
+  muteBtn.addEventListener('click', ()=>{ muted=!muted; muteBtn.textContent = muted? 'Unmute Sounds' : 'Mute Sounds'; });
+  howBtn.addEventListener('click', ()=>{
+    alert('Tap/Click or press Space to jump. Avoid obstacles. Speed increases with time. Funny sounds are mandatory.');
+  });
+
+  function startGame(forceRestart=false){
+    if(running && !forceRestart) return;
+    overlay.style.display = 'none';
+    running = true; resetGame(); lastTime = performance.now();
+    loop(lastTime);
+  }
+
+  function gameOver(){
+    running = false; overlay.style.display = 'flex';
+    // place Game Over card content
+    startCard.innerHTML = `<h2 style="margin:0 0 8px 0">Game Over</h2>
+      <p style="margin:0 0 12px 0;color:#444">Score: ${Math.floor(score)} | High: ${highScore}</p>
+      <div style="display:flex;gap:10px;justify-content:center">
+         <button id='resumeBtn'>Play Again</button>
+         <button class='secondary' id='shareBtn'>Share Score</button>
+      </div>`;
+    document.getElementById('resumeBtn').addEventListener('click', ()=>startGame(true));
+    document.getElementById('shareBtn').addEventListener('click', ()=>{
+      const text = `I scored ${Math.floor(score)} in Jumping Ball Runner! Can you beat me?`;
+      if(navigator.share){ navigator.share({text}); }
+      else { prompt('Copy your score message', text); }
+    });
+    playHit();
+  }
+
+  // obstacles
+  function spawnObstacle(){
+    const h = 40 + Math.random()*60; // varied height
+    const w = 30 + Math.random()*60;
+    const y = groundY - h;
+    const o = {x:W + 100, y, w, h, eyeOffset: 5+Math.random()*10};
+    obstacles.push(o);
+  }
+
+  // collision
+  function rectCircleColliding(circle, rect){
+    const distX = Math.abs(circle.x - rect.x - rect.w/2);
+    const distY = Math.abs(circle.y - rect.y - rect.h/2);
+    if (distX > (rect.w/2 + circle.r)) return false;
+    if (distY > (rect.h/2 + circle.r)) return false;
+    if (distX <= (rect.w/2)) return true;
+    if (distY <= (rect.h/2)) return true;
+    const dx = distX - rect.w/2;
+    const dy = distY - rect.h/2;
+    return (dx*dx + dy*dy <= (circle.r*circle.r));
+  }
+
+  // game loop
+  function loop(t){
+    if(!running) return;
+    const dt = Math.min(40, t - lastTime); lastTime = t; accTime += dt;
+
+    // increase speed slowly
+    speed += 0.001*dt; // gentle ramp
+    score += dt*0.01*(speed/3);
+    scoreEl.textContent = Math.floor(score);
+    if(score > highScore){ highScore = Math.floor(score); highEl.textContent = highScore; localStorage.setItem('jr_high', highScore); }
+
+    // spawn obstacles faster as speed increases
+    spawnTimer += dt;
+    const effectiveRate = Math.max(650, spawnRate - (speed-5)*80);
+    if(spawnTimer > effectiveRate){ spawnTimer = 0; spawnObstacle(); }
+
+    // physics
+    player.vy += 0.6; player.y += player.vy;
+    if(player.y > groundY - player.r){ player.y = groundY - player.r; player.vy = 0; player.onGround = true; }
+
+    // move obstacles
+    for(let i=obstacles.length-1;i>=0;i--){
+      obstacles[i].x -= speed + (speed*0.1);
+      if(obstacles[i].x + obstacles[i].w < -200) obstacles.splice(i,1);
+      if(rectCircleColliding(player, obstacles[i])){ // collision
+        // tiny bounce-back effect and then game over
+        player.vy = -6; draw(); setTimeout(()=>gameOver(), 80); running=false; return;
+      }
+    }
+
+    // parallax updates
+    const px = (performance.now()*0.02) % W;
+    layerFar.style.transform = `translateX(${-px*0.08}px)`;
+    layerClouds.style.transform = `translateX(${-px*0.25}px)`;
+    layerHills.style.transform = `translateX(${-px*0.5}px)`;
+
+    // milestone pings
+    if(Math.floor(score) % 100 === 0 && Math.floor(score) !== 0 && Math.floor(score) !== Math.floor((score-dt*0.01*(speed/3)))){
+      playPing();
+    }
+
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // drawing
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // sky gradient via clear background left transparent
+
+    // ground
+    ctx.fillStyle = '#4a7a4a';
+    ctx.fillRect(0, groundY, W, H-groundY);
+
+    // draw hills stylized as blobs
+    drawHills();
+
+    // draw obstacles (cartoony blocks with eyes)
+    obstacles.forEach(o=>{
+      ctx.save();
+      ctx.translate(o.x, o.y);
+      // body
+      roundRect(ctx, 0, 0, o.w, o.h, 8, '#7b5bff');
+      // eyes
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.ellipse(o.w*0.3, o.h*0.35, o.h*0.15, o.h*0.12, 0, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(o.w*0.7, o.h*0.35, o.h*0.15, o.h*0.12, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(o.w*0.3+o.eyeOffset*0.3, o.h*0.36, o.h*0.06, o.h*0.06, 0, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(o.w*0.7+o.eyeOffset*0.1, o.h*0.36, o.h*0.06, o.h*0.06, 0, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+
+    // player (ball with face)
+    drawBall(player.x, player.y, player.r, player.color);
+
+    // goofy shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.ellipse(player.x, groundY+6, player.r*0.9, player.r*0.35, 0, 0, Math.PI*2); ctx.fill();
+  }
+
+  function drawBall(x,y,r,color){
+    // slightly squash based on vy
+    const squish = Math.max(0.8, 1 - Math.min(8, Math.abs(player.vy))/30);
+    ctx.save(); ctx.translate(x,y);
+    ctx.scale(1, squish);
+    // body
+    const grad = ctx.createRadialGradient(-r*0.2,-r*0.2,r*0.2,0,0,r);
+    grad.addColorStop(0,'#ffffff'); grad.addColorStop(0.1,color); grad.addColorStop(1,'#ff4d4d');
+    ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+    // eyes
+    ctx.scale(1,1/squish);
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-r*0.22,-r*0.12,r*0.28,r*0.32,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(r*0.12,-r*0.12,r*0.22,r*0.28,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-r*0.18,-r*0.08,r*0.09,r*0.11,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(r*0.14,-r*0.08,r*0.07,r*0.09,0,0,Math.PI*2); ctx.fill();
+    // smile
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(0,r*0.05,r*0.35,0.1,Math.PI-0.1); ctx.stroke();
+    ctx.restore();
+  }
+
+  function roundRect(ctx, x, y, w, h, r, fillStyle){ ctx.fillStyle = fillStyle; ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); ctx.fill(); }
+
+  // decorative hills - drawn lightly for extra cartoony feel
+  function drawHills(){
+    // simple repeated blobs
+    for(let i=0;i<6;i++){
+      const base = (i*260 + (performance.now()*0.02)) % (W+400) - 200;
+      const cx = base - 140; const cy = groundY - 10 - (i%2)*30; const r = 220 + (i%3)*90;
+      const g = ctx.createLinearGradient(cx-r,cy, cx+r, cy+r);
+      g.addColorStop(0,'#b3f1d0'); g.addColorStop(1,'#46c37b');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(cx,cy, r, r*0.6, 0, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  // auto-resize canvas to container size
+  function fitCanvas(){
+    const ratio = canvas.width / canvas.height;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(800, Math.floor(rect.width * window.devicePixelRatio));
+    canvas.height = Math.max(400, Math.floor(rect.height * window.devicePixelRatio));
+    W = canvas.width; H = canvas.height;
+  }
+  window.addEventListener('resize', ()=>{ fitCanvas(); resetGame(); draw(); });
+
+  // init
+  fitCanvas(); resetGame(); draw();
+
+  // Friendly tip: if page sounds blocked by browser autoplay, try interacting with the page (tap/click) once to enable.
+
+  // make the parallax layers visually interesting using inline SVG backgrounds
+  function buildParallax(){
+    // far - tiny dots like stars/cloud shimmer
+    layerFar.style.backgroundImage = `radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0 3px, transparent 4px), radial-gradient(circle at 70% 40%, rgba(255,255,255,0.06) 0 4px, transparent 6px)`;
+    layerFar.style.bottom = '40%'; layerFar.style.opacity = 0.55;
+
+    // clouds - soft stripes
+    layerClouds.style.backgroundImage = `linear-gradient(90deg, rgba(255,255,255,0.9) 0 120px, transparent 120px 220px)`;
+    layerClouds.style.top = '6%'; layerClouds.style.opacity = 0.9;
+
+    // hills
+    layerHills.style.backgroundImage = `linear-gradient(180deg,#b3f1d0,#46c37b)`;
+    layerHills.style.bottom = '0';
+  }
+  buildParallax();
+
+  // small joyful initial animation
+  (function introBounce(){
+    let t=0; const id = setInterval(()=>{ t+=0.04; ctx.clearRect(0,0,W,H); drawHills(); drawBall(200, groundY - 30 - Math.sin(t)*18, 30, '#ff6b6b'); if(t>3) { clearInterval(id); draw(); } }, 30);
+  })();
+
+  // ensure audio context resumes on first interaction (mobile autoplay policy)
+  ['touchstart','mousedown','keydown'].forEach(ev=>window.addEventListener(ev, ()=>{ if(audioCtx.state === 'suspended') audioCtx.resume(); }, {once:true}));
+
   </script>
 </body>
 </html>
